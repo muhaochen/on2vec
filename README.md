@@ -1,4 +1,4 @@
-# Multilingual Knowledge Graph Embeddings for Cross-lingual Knowledge Alignment
+# Embedding-based Relation Prediction for Ontology Population. In *Proceedings of the 17th SIAM International Conference on Data Mining
 
 This repository includes the code of On2Vec.
 
