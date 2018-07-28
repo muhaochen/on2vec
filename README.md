@@ -1,4 +1,4 @@
-# Embedding-based Relation Prediction for Ontology Population. In *Proceedings of the 17th SIAM International Conference on Data Mining*
+# Embedding-based Relation Prediction for Ontology Population
 
 This repository includes the code of On2Vec.
 
