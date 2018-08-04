@@ -1,6 +1,6 @@
 # Embedding-based Relation Prediction for Ontology Population
 
-This repository includes the code of On2Vec.
+This repository includes the code of On2Vec. Two versions of implementation are provided: under yago/ is the regular on2vec scripts (CSM+HM), and under yago_wohm without HM.
 
 ## Reference
 Please refer to our paper. 

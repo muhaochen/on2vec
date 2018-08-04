@@ -121,9 +121,9 @@ class TFParts(object):
             '''
             A_loss_matrix = tf.sub(
                 tf.add(
-                    tf.batch_matmul(A_h_con_batch, tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])),
+                    tf.matmul(A_h_con_batch, tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])),
                     A_rel_batch),
-                tf.batch_matmul(A_t_con_batch, tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim]))
+                tf.matmul(A_t_con_batch, tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim]))
             )'''
             
             # a batch of vectors multiply a batch of matrices.
@@ -135,12 +135,12 @@ class TFParts(object):
             A_hn_con_batch = tf.nn.embedding_lookup(ht,A_hn_index)
             A_tn_con_batch = tf.nn.embedding_lookup(ht,A_tn_index)
             # This is a batch of h * M_hr given a batch of (h, r, t)
-            A_h_batch_mul = tf.squeeze(tf.batch_matmul(tf.expand_dims(A_h_con_batch, 1), tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            A_h_batch_mul = tf.squeeze(tf.matmul(tf.expand_dims(A_h_con_batch, 1), tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])), [1])
             # This is a batch of t * M_hr given a batch of (h, r, t)
-            A_t_batch_mul = tf.squeeze(tf.batch_matmul(tf.expand_dims(A_t_con_batch, 1), tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            A_t_batch_mul = tf.squeeze(tf.matmul(tf.expand_dims(A_t_con_batch, 1), tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim])), [1])
             # negative sampled h and t
-            A_hn_batch_mul = tf.squeeze(tf.batch_matmul(tf.expand_dims(A_hn_con_batch, 1), tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])), [1])
-            A_tn_batch_mul = tf.squeeze(tf.batch_matmul(tf.expand_dims(A_tn_con_batch, 1), tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            A_hn_batch_mul = tf.squeeze(tf.matmul(tf.expand_dims(A_hn_con_batch, 1), tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            A_tn_batch_mul = tf.squeeze(tf.matmul(tf.expand_dims(A_tn_con_batch, 1), tf.reshape(A_mat_t_batch, [-1, self.dim, self.dim])), [1])
             
             # This stores h M_hr + r - t M_tr
             A_loss_matrix = tf.sub(
@@ -216,11 +216,11 @@ class TFParts(object):
             B_con_hn_batch = tf.nn.embedding_lookup(ht,B_hn_index)
             B_con_tn_batch = tf.nn.embedding_lookup(ht,B_tn_index)
             # multiplication of a batch of vectors and a batch of matrices
-            B_t_batch_mul_head = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_h_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
-            B_t_batch_mul_tail = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_t_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            B_t_batch_mul_head = tf.squeeze(tf.matmul(tf.expand_dims(B_con_h_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            B_t_batch_mul_tail = tf.squeeze(tf.matmul(tf.expand_dims(B_con_t_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
             # multiplication of a batch of vectors and a batch of matrices for negative samples
-            B_tn_batch_mul_head = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_hn_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
-            B_tn_batch_mul_tail = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_tn_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            B_tn_batch_mul_head = tf.squeeze(tf.matmul(tf.expand_dims(B_con_hn_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            B_tn_batch_mul_tail = tf.squeeze(tf.matmul(tf.expand_dims(B_con_tn_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
             # t*M_hr + r ~ t*M_tr
             # This stores h M_hr + r - t M_tr for more t's of the singular h's. Below it is the one for negative samples
             B_t_loss_matrix = tf.sub(tf.add(B_t_batch_mul_head, B_rel_batch), B_t_batch_mul_tail)
@@ -243,11 +243,11 @@ class TFParts(object):
                 )
             
             # multiplication of a batch of vectors and a batch of matrices
-            B_h_batch_mul_head = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_h_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
-            B_h_batch_mul_tail = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_t_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            B_h_batch_mul_head = tf.squeeze(tf.matmul(tf.expand_dims(B_con_h_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            B_h_batch_mul_tail = tf.squeeze(tf.matmul(tf.expand_dims(B_con_t_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
             # multiplication of a batch of vectors and a batch of matrices for negative samples
-            B_hn_batch_mul_head = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_hn_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
-            B_hn_batch_mul_tail = tf.squeeze(tf.batch_matmul(tf.expand_dims(B_con_tn_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
+            B_hn_batch_mul_head = tf.squeeze(tf.matmul(tf.expand_dims(B_con_hn_batch, 1), tf.reshape(B_mat_h_batch, [-1, self.dim, self.dim])), [1])
+            B_hn_batch_mul_tail = tf.squeeze(tf.matmul(tf.expand_dims(B_con_tn_batch, 1), tf.reshape(B_mat_t_batch, [-1, self.dim, self.dim])), [1])
             # t*M_tr - r ~ h*M_hr
             # This stores h M_hr + r - t M_tr for more h's of the singular t's. Below it is the one for negative samples
             B_h_loss_matrix = tf.sub(tf.sub(B_h_batch_mul_tail, B_rel_batch), B_h_batch_mul_head)
