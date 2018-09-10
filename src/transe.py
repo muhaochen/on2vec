@@ -106,7 +106,7 @@ class TFParts(object):
                 shape=[self.batch_size],
                 name='A_tn_index')
             '''
-            A_loss_matrix = tf.sub(
+            A_loss_matrix = tf.subtract(
                 tf.add(
                     tf.batch_matmul(A_h_con_batch, tf.reshape(A_mat_h_batch, [-1, self.dim, self.dim])),
                     A_rel_batch),
@@ -122,34 +122,34 @@ class TFParts(object):
             A_tn_con_batch = tf.nn.embedding_lookup(ht,A_tn_index)
             
             # This stores h M_hr + r - t M_tr
-            A_loss_matrix = tf.sub(tf.add(A_h_con_batch, A_rel_batch), A_t_con_batch)
+            A_loss_matrix = tf.subtract(tf.add(A_h_con_batch, A_rel_batch), A_t_con_batch)
             # This stores h' M_hr + r - t' M_tr for negative samples
-            A_neg_matrix = tf.sub(tf.add(A_hn_con_batch, A_rel_batch), A_tn_con_batch)
+            A_neg_matrix = tf.subtract(tf.add(A_hn_con_batch, A_rel_batch), A_tn_con_batch)
             # L-2 norm
             # [||h M_hr + r - t M_tr|| + m1 - ||h' M_hr + r - t' M_tr||)]+     here [.]+ means max (. , 0)
             if self.L1:
                 self._A_loss = A_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(tf.add(tf.reduce_sum(tf.abs(A_loss_matrix), 1), self._m1),
+                    tf.subtract(tf.add(tf.reduce_sum(tf.abs(A_loss_matrix), 1), self._m1),
                     tf.reduce_sum(tf.abs(A_neg_matrix), 1)), 
                     0.)
                 ) 
             else:
                 self._A_loss = A_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(tf.add(tf.sqrt(tf.reduce_sum(tf.square(A_loss_matrix), 1)), self._m1),
+                    tf.subtract(tf.add(tf.sqrt(tf.reduce_sum(tf.square(A_loss_matrix), 1)), self._m1),
                     tf.sqrt(tf.reduce_sum(tf.square(A_neg_matrix), 1))), 
                     0.)
                 ) 
 
             # soft-constraint on vector norms for both positive and negative sampled h and t
             # [||h|| - 1]+  +  [||t|| - 1]+  +  [||h'|| - 1]+  +  [||t'|| - 1]+
-            #A_vec_restraint = tf.concat(0, [tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.),             tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_hn_con_batch), 1)), 1.), 0.), tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_tn_con_batch), 1)), 1.), 0.)])
+            #A_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.),             tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_con_batch), 1)), 1.), 0.)])
 
-            #A_vec_restraint = tf.concat(0, [tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.)])
-            A_vec_restraint = tf.concat(0, [tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.)), tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.))])
+            #A_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.)])
+            A_vec_restraint = tf.concat(0, [tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.))])
 
-            A_rel_restraint = tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(A_rel_batch), 1)), 2.), 0.)
+            A_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_rel_batch), 1)), 2.), 0.)
 
             # Type B loss : 
             # 2 losses: t-related <- omega(M_t o1, M_t o2) and h-related <- omega(M_h o1, M_h o2)
@@ -187,50 +187,50 @@ class TFParts(object):
            
             # t*M_hr + r ~ t*M_tr
             # This stores h M_hr + r - t M_tr for more t's of the singular h's. Below it is the one for negative samples
-            B_t_loss_matrix = tf.sub(tf.add(B_con_h_batch, B_rel_batch), B_con_t_batch)
-            B_tn_loss_matrix = tf.sub(tf.add(B_con_hn_batch, B_rel_batch), B_con_tn_batch)
+            B_t_loss_matrix = tf.subtract(tf.add(B_con_h_batch, B_rel_batch), B_con_t_batch)
+            B_tn_loss_matrix = tf.subtract(tf.add(B_con_hn_batch, B_rel_batch), B_con_tn_batch)
             
             # [||h M_hr + r - t M_tr|| + m1 - ||h M_hr + r - t' M_tr||]+   Actually only t is corrupted for B_t related batches
             if self.L1:
                 self._B_t_loss = B_t_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(
+                    tf.subtract(
                     tf.add(tf.reduce_sum(tf.abs(B_t_loss_matrix), 1), self._m2), tf.reduce_sum(tf.abs(B_tn_loss_matrix), 1)
                     ), 0.)
                 )
             else:
                 self._B_t_loss = B_t_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(
+                    tf.subtract(
                     tf.add(tf.sqrt(tf.reduce_sum(tf.square(B_t_loss_matrix), 1)), self._m2), tf.sqrt(tf.reduce_sum(tf.square(B_tn_loss_matrix), 1))
                     ), 0.)
                 )
             
             # t*M_tr - r ~ h*M_hr
-            B_h_loss_matrix = tf.sub(tf.add(B_con_h_batch, B_rel_batch), B_con_t_batch)
-            B_hn_loss_matrix = tf.sub(tf.add(B_con_hn_batch, B_rel_batch), B_con_tn_batch)
+            B_h_loss_matrix = tf.subtract(tf.add(B_con_h_batch, B_rel_batch), B_con_t_batch)
+            B_hn_loss_matrix = tf.subtract(tf.add(B_con_hn_batch, B_rel_batch), B_con_tn_batch)
 
             #  [||t M_tr - r - h M_hr|| + m2 - ||t M_tr - r - h M_hr|| ]+      Actually only h is corrupted for B_h related batches
             if self.L1:
                 self._B_h_loss = B_h_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(
+                    tf.subtract(
                     tf.add(tf.reduce_sum(tf.abs(B_h_loss_matrix), 1), self._m2), tf.reduce_sum(tf.abs(B_hn_loss_matrix), 1)
                     ), 0.)
                 )
             else:
                 self._B_h_loss = B_h_loss = tf.reduce_sum(
                     tf.maximum(
-                    tf.sub(
+                    tf.subtract(
                     tf.add(tf.sqrt(tf.reduce_sum(tf.square(B_h_loss_matrix), 1)), self._m2), tf.sqrt(tf.reduce_sum(tf.square(B_hn_loss_matrix), 1))
                     ), 0.)
                 )
             
             # penalize on pre- and post-projected vectors whose norm exceeds 1
 
-            B_vec_restraint = tf.concat(0, [tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.)), tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.)), 
-            tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.)), tf.abs(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.))])
-            B_rel_restraint = tf.maximum(tf.sub(tf.sqrt(tf.reduce_sum(tf.square(B_rel_batch), 1)), 2.), 0.)
+            B_vec_restraint = tf.concat(0, [tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.)), 
+            tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.))])
+            B_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_rel_batch), 1)), 2.), 0.)
 
 
             # Type C loss : Soft-constraint on vector norms
