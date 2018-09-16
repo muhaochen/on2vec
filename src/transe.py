@@ -147,7 +147,7 @@ class TFParts(object):
             #A_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.),             tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_con_batch), 1)), 1.), 0.)])
 
             #A_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.)])
-            A_vec_restraint = tf.concat(0, [tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.))])
+            A_vec_restraint = tf.concat([tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.))], 0)
 
             A_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_rel_batch), 1)), 2.), 0.)
 
@@ -228,8 +228,8 @@ class TFParts(object):
             
             # penalize on pre- and post-projected vectors whose norm exceeds 1
 
-            B_vec_restraint = tf.concat(0, [tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.)), 
-            tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.))])
+            B_vec_restraint = tf.concat([tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.)), 
+            tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.)), tf.abs(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.))], 0)
             B_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_rel_batch), 1)), 2.), 0.)
 
 

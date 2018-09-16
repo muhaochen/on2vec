@@ -172,11 +172,11 @@ class TFParts(object):
 
             # soft-constraint on vector norms for both positive and negative sampled h and t
             # [||h|| - 1]+  +  [||t|| - 1]+  +  [||h'|| - 1]+  +  [||t'|| - 1]+
-            A_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.), 
-            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_con_batch), 1)), 1.), 0.)])
+            A_vec_restraint = tf.concat([tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_con_batch), 1)), 1.), 0.), 
+            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_con_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_con_batch), 1)), 1.), 0.)], 0)
             # soft-constraint on projected vectors for both positive and negative sampled h and t
-            A_proj_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_batch_mul), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_batch_mul), 1)), 1.), 0.), 
-            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_batch_mul), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_batch_mul), 1)), 1.), 0.)])
+            A_proj_restraint = tf.concat([tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_h_batch_mul), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_t_batch_mul), 1)), 1.), 0.), 
+            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_hn_batch_mul), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_tn_batch_mul), 1)), 1.), 0.)], 0)
             A_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(A_rel_batch), 1)), 2.), 0.)
 
             # Type B loss : 
@@ -271,12 +271,12 @@ class TFParts(object):
             
             # penalize on pre- and post-projected vectors whose norm exceeds 1
 
-            B_vec_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.), 0.), 
-            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.), 0.)])
-            B_t_proj_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_t_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_t_batch_mul_tail), 1)), 1.), 0.), 
-            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_tn_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_tn_batch_mul_tail), 1)), 1.), 0.)])
-            B_h_proj_restraint = tf.concat(0, [tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_h_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_h_batch_mul_tail), 1)), 1.), 0.), 
-            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_hn_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_hn_batch_mul_tail), 1)), 1.), 0.)])
+            B_vec_restraint = tf.concat([tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_h_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_t_batch), 1)), 1.), 0.), 
+            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_hn_batch), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_con_tn_batch), 1)), 1.), 0.)], 0)
+            B_t_proj_restraint = tf.concat([tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_t_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_t_batch_mul_tail), 1)), 1.), 0.), 
+            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_tn_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_tn_batch_mul_tail), 1)), 1.), 0.)], 0)
+            B_h_proj_restraint = tf.concat([tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_h_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_h_batch_mul_tail), 1)), 1.), 0.), 
+            tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_hn_batch_mul_head), 1)), 1.), 0.), tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_hn_batch_mul_tail), 1)), 1.), 0.)], 0)
             B_rel_restraint = tf.maximum(tf.subtract(tf.sqrt(tf.reduce_sum(tf.square(B_rel_batch), 1)), 2.), 0.)
 
 
@@ -284,9 +284,9 @@ class TFParts(object):
             #self._C_loss = C_loss = tf.reduce_sum(tf.concat(0, [A_vec_restraint, B_vec_restraint, A_proj_restraint, B_t_proj_restraint, B_h_proj_restraint, A_rel_restraint, B_rel_restraint]))
             #self._C_loss = C_loss = tf.reduce_sum(tf.concat(0, [A_vec_restraint, B_vec_restraint, A_proj_restraint, B_t_proj_restraint, B_h_proj_restraint]))
             #self._C_loss = C_loss = tf.reduce_sum(tf.concat(0, [A_vec_restraint, A_proj_restraint, A_rel_restraint]))
-            self._C_loss_A = C_loss_A = tf.reduce_sum(tf.concat(0, [A_vec_restraint, A_proj_restraint, A_rel_restraint]))
-            self._C_loss_B1 = C_loss_B1 = tf.reduce_sum(tf.concat(0, [B_vec_restraint, B_t_proj_restraint, B_rel_restraint]))
-            self._C_loss_B2 = C_loss_B2 = tf.reduce_sum(tf.concat(0, [B_vec_restraint, B_h_proj_restraint, B_rel_restraint]))
+            self._C_loss_A = C_loss_A = tf.reduce_sum(tf.concat([A_vec_restraint, A_proj_restraint, A_rel_restraint], 0))
+            self._C_loss_B1 = C_loss_B1 = tf.reduce_sum(tf.concat([B_vec_restraint, B_t_proj_restraint, B_rel_restraint], 0))
+            self._C_loss_B2 = C_loss_B2 = tf.reduce_sum(tf.concat([B_vec_restraint, B_h_proj_restraint, B_rel_restraint], 0))
             
             # Optimizer
             self._lr = lr = tf.placeholder(tf.float32)
