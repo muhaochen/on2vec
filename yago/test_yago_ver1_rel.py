@@ -20,10 +20,10 @@ import model
 import trainer
 from tester_basic import Tester
 
-model_file = 'yago-model.ckpt'
+model_file = 'yago-model-1.0.ckpt'
 data_file = 'yago-data.bin'
 test_data = '../../../onto2vec-dataset/Yago/yagoFactsFiltCDTTest.tsv'
-result_file2 = '../../results/yago_v2/test_yago_rel.txt'
+result_file2 = '../../results/yago_v2/1.0_test_yago_rel.txt'
 
 trsym = ['isLocatedIn', 'isConnectedTo','isMarriedTo', 'hasNeighbor', 'isConnectedTo', 'dealsWith']
 hier = ['hasChild', 'hasAcademicAdvisor', 'isLocatedIn', 'isLeaderOf', 'hasGender']
@@ -65,8 +65,8 @@ def test2(tester, index, score_rel, score_trsym, score_hier):
         rel_pool = tester.vec_r
         target = np.array([-1, 10000.])
         for rel in range(len(rel_pool)):
-            head_vec = tester.projection(h, rel, h_or_t='h')
-            tail_vec = tester.projection(t, rel, h_or_t='t')
+            head_vec = tester.projection(h, r, h_or_t='h')
+            tail_vec = tester.projection(t, r, h_or_t='t')
             rel_vec = tester.rel_index2vec(rel)
             dis_score = LA.norm(head_vec+rel_vec-tail_vec)
             if dis_score < target[1]:

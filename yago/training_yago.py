@@ -29,7 +29,7 @@ from trainer import Trainer
 
 
 # In[4]:
-model_path = 'yago-model.ckpt'
+model_path = 'yago-model-1.0.ckpt'
 data_path = 'yago-data.bin'
 filename = "../../../onto2vec-dataset/Yago/yagoFactsFiltCDTTrain.tsv"
 more_filt = ['../../../onto2vec-dataset/Yago/yagoFactsFiltCDTTest.tsv']
@@ -55,7 +55,7 @@ m_train.build(this_data, dim=100, batch_size=500, save_path = model_path, data_s
 
 # In[ ]:
 
-m_train.train(epochs=500, save_every_epoch=50, lr=0.001, a1=0.75, a2=2.0, m1=1., m2=1., balance_alpha1=False, feed_pre=False)
+m_train.train(epochs=500, save_every_epoch=50, lr=0.001, a1= 1.0 , a2=2.0, m1=1., m2=1., balance_alpha1=False, feed_pre=False)
 
 
 # In[ ]:
